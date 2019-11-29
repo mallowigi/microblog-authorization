@@ -1,5 +1,5 @@
 import { IsString } from 'class-validator';
-import { RoleType } from 'src/models/roleType';
+import { RoleType } from 'src/models/enums';
 
 export interface Roles {
   userId: string;

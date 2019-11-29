@@ -1,7 +1,7 @@
 import { logger }                                 from '@micro/common/dist/src';
 import { Injectable }                             from '@nestjs/common';
+import { RoleType }                               from 'src/models/enums';
 import { IRole, newAdminRole, newUserRole, Role } from 'src/models/role';
-import { RoleType }                               from 'src/models/roleType';
 import { CreateRole, Roles }                      from 'src/schemas/roles';
 
 @Injectable()
