@@ -1,6 +1,6 @@
-import { connect, model, Schema } from 'mongoose';
-import * as mongoosePaginate      from 'mongoose-paginate';
-import { RoleType }               from 'src/models/roleType';
+import { connect, Document, model, Schema } from 'mongoose';
+import * as mongoosePaginate                from 'mongoose-paginate';
+import { RoleType }                         from 'src/models/roleType';
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
@@ -20,4 +20,9 @@ const RoleSchema = new Schema({
 
 RoleSchema.plugin(mongoosePaginate);
 
-export const Role = model('Role', RoleSchema);
+export interface IRole extends Document {
+  userId: string;
+  type: string;
+}
+
+export const Role = model<IRole>('Role', RoleSchema);
