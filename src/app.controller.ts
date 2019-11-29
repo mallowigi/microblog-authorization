@@ -1,6 +1,6 @@
-import { Controller, Get, Param, Post } from '@nestjs/common';
-import { RolesService }                 from 'src/roles/roles.service';
-import { CreateRole }                   from 'src/schemas/roles';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { RolesService }                       from 'src/roles.service';
+import { CreateRole }                         from 'src/schemas/roles';
 
 @Controller('/roles')
 export class AppController {
@@ -13,7 +13,7 @@ export class AppController {
   }
 
   @Post()
-  async createRole(req: CreateRole) {
+  async createRole(@Body() req: CreateRole) {
     return await this.rolesService.createRole(req);
   }
 }

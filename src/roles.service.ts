@@ -1,8 +1,8 @@
-import { logger }                                 from '@micro/common/dist/src';
-import { Injectable }                             from '@nestjs/common';
-import { RoleType }                               from 'src/models/enums';
-import { IRole, newAdminRole, newUserRole, Role } from 'src/models/role';
-import { CreateRole, Roles }                      from 'src/schemas/roles';
+import { logger }              from '@micro/common/dist/src';
+import { Injectable }          from '@nestjs/common';
+import { IRole, Role }         from 'src/models/role';
+import { RoleType, roleTypes } from 'src/models/roleTypes';
+import { CreateRole, Roles }   from 'src/schemas/roles';
 
 @Injectable()
 export class RolesService {
@@ -38,7 +38,7 @@ export class RolesService {
     }
 
     if (type === RoleType.User) {
-      const newRole = await newUserRole(userId);
+      const newRole = await this.newUserRole(userId);
       logger.info({
         message: 'user role created',
         payload: { userId },
@@ -46,7 +46,7 @@ export class RolesService {
       return newRole;
     }
     else if (type === RoleType.Admin) {
-      const newRole = await newAdminRole(userId);
+      const newRole = await this.newAdminRole(userId);
       logger.info({
         message: 'admin role created',
         payload: { userId },
@@ -61,5 +61,21 @@ export class RolesService {
       });
       throw Error(message);
     }
+  }
+
+  async newUserRole(userId: string): Promise<IRole> {
+    return await Role.create({
+      userId,
+      type:        roleTypes.user.type,
+      permissions: roleTypes.user.permissions,
+    });
+  }
+
+  async newAdminRole(userId: string): Promise<IRole> {
+    return await Role.create({
+      userId,
+      type:        roleTypes.admin.type,
+      permissions: roleTypes.admin.permissions,
+    });
   }
 }
