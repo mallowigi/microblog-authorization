@@ -1,28 +1,33 @@
-import { connect, Document, model, Schema } from 'mongoose';
-import * as mongoosePaginate                from 'mongoose-paginate';
-import { RoleType }                         from 'src/models/roleType';
+import { connect, Model }                             from 'mongoose';
+import * as mongoosePaginate                          from 'mongoose-paginate';
+import { RoleType }                                   from 'src/models/roleType';
+import { createSchema, ExtractDoc, Type, typedModel } from 'ts-mongoose';
 
 const MONGODB_URL = process.env.MONGODB_URL;
 
 connect(`${MONGODB_URL}/authorization`, { useNewUrlParser: true });
 
-const RoleSchema = new Schema({
+const RoleSchema = createSchema({
   userId: {
-    type:     String,
-    required: true,
+    type: Type.string({ required: true }),
   },
   type:   {
-    type:     String,
-    required: true,
-    enum:     Object.values(RoleType),
+    type: Type.string({
+      required: true,
+      enum:     Object.values(RoleType),
+    }),
   },
 });
 
 RoleSchema.plugin(mongoosePaginate);
 
-export interface IRole extends Document {
-  userId: string;
-  type: string;
+export type IRole = ExtractDoc<typeof RoleSchema>;
+export const Role: Model<IRole> = typedModel('Role', RoleSchema);
+
+export async function newUserRole(userId): IRole {
+  return new Role({});
 }
 
-export const Role = model<IRole>('Role', RoleSchema);
+export async function newAdminRole(userId): IRole {
+  return new Role({});
+}

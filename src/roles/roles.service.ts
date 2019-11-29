@@ -1,8 +1,8 @@
-import { logger }            from '@micro/common/dist/src';
-import { Injectable }        from '@nestjs/common';
-import { IRole, Role }       from 'src/models/role';
-import { RoleType }          from 'src/models/roleType';
-import { CreateRole, Roles } from 'src/schemas/roles';
+import { logger }                                 from '@micro/common/dist/src';
+import { Injectable }                             from '@nestjs/common';
+import { IRole, newAdminRole, newUserRole, Role } from 'src/models/role';
+import { RoleType }                               from 'src/models/roleType';
+import { CreateRole, Roles }                      from 'src/schemas/roles';
 
 @Injectable()
 export class RolesService {
@@ -38,7 +38,7 @@ export class RolesService {
     }
 
     if (type === RoleType.User) {
-      const newRole = await Role.newUserRole(userId);
+      const newRole = await newUserRole(userId);
       logger.info({
         message: 'user role created',
         payload: { userId },
@@ -46,7 +46,7 @@ export class RolesService {
       return newRole;
     }
     else if (type === RoleType.Admin) {
-      const newRole = await Role.newAdminRole(userId);
+      const newRole = await newAdminRole(userId);
       logger.info({
         message: 'admin role created',
         payload: { userId },
