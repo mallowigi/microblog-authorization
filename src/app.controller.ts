@@ -1,12 +1,13 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Param } from '@nestjs/common';
+import { RolesService }           from 'src/roles/roles.service';
 
-@Controller()
+@Controller('/roles')
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly rolesService: RolesService) {
+  }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get(':id')
+  async getRoles(@Param('id') id: string) {
+    return await this.rolesService.getRoles({ userId: id });
   }
 }
