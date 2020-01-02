@@ -1,19 +1,62 @@
-import { logger }              from '@micro/common/dist/src';
-import { Injectable }          from '@nestjs/common';
-import { IRole, Role }         from 'src/models/role';
-import { RoleType, roleTypes } from 'src/models/roleTypes';
-import { CreateRole, Roles }   from 'src/schemas/roles';
+import { logger }                                                                              from '@micro/common/dist/src';
+import { CanOnInstanceRequest, CanOnInstanceResponse, CanRequest, CanResponse, IRolesService } from '@micro/common/types/authorization';
+import { Injectable }                                                                          from '@nestjs/common';
+import { IRole, Role }                                                                         from 'src/models/role';
+import { RoleType, roleTypes }                                                                 from 'src/models/roleTypes';
+import { CreateRole }                                                                          from 'src/schemas/roles';
+
+function canBySubject(param: { subject: string; roles: any; action: string; userId: string }) {
+  return false;
+}
+
+async function canBySubjectInstance(param: { subject: string; roles: any; action: string; userId: string; subjectId: string }) {
+  return undefined;
+}
 
 @Injectable()
-export class RolesService {
-  public async getRoles({ userId }: Roles): Promise<IRole[]> {
+export class RolesService implements IRolesService<IRole> {
+  public async can(request: CanRequest): Promise<CanResponse> {
+    try {
+      const { userId } = request;
+      // Get all roles related with the user
+      const roles = await Role.find({ userId });
+      return { yes: canBySubject({ roles, ...request }) };
+    }
+    catch (error) {
+      logger.error({
+        message: 'permission error',
+        payload: request,
+        error,
+      });
+      return { yes: false };
+    }
+  }
+
+  public async canOnInstance(request: CanOnInstanceRequest): Promise<CanOnInstanceResponse> {
+    try {
+      const { userId } = request;
+      // Get all roles related with the user
+      const roles = await Role.find({ userId });
+      return { yes: await canBySubjectInstance({ roles, ...request }) };
+    }
+    catch (error) {
+      logger.error({
+        message: 'permission error',
+        payload: request,
+        error,
+      });
+      return { yes: false };
+    }
+  }
+
+  public async getRoles({ userId }) {
     try {
       const roles = await Role.find({ userId });
       logger.info({
         message: 'fetched roles',
         payload: { userId },
       });
-      return roles;
+      return { roles };
     }
     catch (e) {
       logger.error({
@@ -43,7 +86,7 @@ export class RolesService {
         message: 'user role created',
         payload: { userId },
       });
-      return newRole;
+      return { role: newRole };
     }
     else if (type === RoleType.Admin) {
       const newRole = await this.newAdminRole(userId);
@@ -51,7 +94,7 @@ export class RolesService {
         message: 'admin role created',
         payload: { userId },
       });
-      return newRole;
+      return { role: newRole };
     }
     else {
       const message = 'Invalid role type';
@@ -78,4 +121,5 @@ export class RolesService {
       permissions: roleTypes.admin.permissions,
     });
   }
+
 }

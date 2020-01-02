@@ -2,6 +2,7 @@ import { connect, Model }                                           from 'mongoo
 import * as mongoosePaginate                                        from 'mongoose-paginate';
 import { ActionType }                                               from 'src/models/actionTypes';
 import { RoleType }                                                 from 'src/models/roleTypes';
+import { SubjectType }                                              from 'src/models/subjects';
 import { createSchema, ExtractDoc, ExtractProps, Type, typedModel } from 'ts-mongoose';
 
 const MONGODB_URL = process.env.MONGODB_URL;
@@ -9,13 +10,19 @@ const MONGODB_URL = process.env.MONGODB_URL;
 connect(`${MONGODB_URL}/authorization`, { useNewUrlParser: true });
 
 const SubjectSchema = createSchema({
-  type:               Type.string({ required: true }),
+  type:               Type.string({
+    required: true,
+    enum:     Object.values(SubjectType),
+  }),
   conditionFieldName: Type.string(),
 }, { _id: false });
 
 const PermissionSchema = createSchema({
   actions: Type.array().of(
-    Type.string({ required: true, enum: Object.values(ActionType) }),
+    Type.string({
+      required: true,
+      enum:     Object.values(ActionType),
+    }),
   ),
   subject: Type.schema({ required: true }).of(SubjectSchema),
 }, { _id: false });
