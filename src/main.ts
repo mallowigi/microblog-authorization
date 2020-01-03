@@ -17,7 +17,7 @@ async function bootstrap() {
   app.connectMicroservice({
     transport: Transport.NATS,
     options:   {
-      url:   process.env.NATS_URL,
+      url:   process.env.NATS_URL || 'nats://localhost:8222',
       queue: 'authorization',
       name:  'authorization',
     },
