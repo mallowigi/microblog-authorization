@@ -1,9 +1,15 @@
-import { logger }                                                                              from '@micro/common/dist/src';
-import { CanOnInstanceRequest, CanOnInstanceResponse, CanRequest, CanResponse, IRolesService } from '@micro/common/types/authorization';
-import { Injectable }                                                                          from '@nestjs/common';
-import { IRole, Role }                                                                         from 'src/models/role';
-import { RoleType, roleTypes }                                                                 from 'src/models/roleTypes';
-import { CreateRole }                                                                          from 'src/schemas/roles';
+import { logger }              from '@micro/common/dist/src';
+import {
+  CanOnInstanceRequest,
+  CanOnInstanceResponse,
+  CanRequest,
+  CanResponse,
+  CreateRoleRequest,
+  IRolesService,
+}                              from '@micro/common/src/types/authorization';
+import { Injectable }          from '@nestjs/common';
+import { IRole, Role }         from 'src/models/role';
+import { RoleType, roleTypes } from 'src/models/roleTypes';
 
 function canBySubject(param: { subject: string; roles: any; action: string; userId: string }) {
   return false;
@@ -66,7 +72,7 @@ export class RolesService implements IRolesService<IRole> {
     }
   }
 
-  public async createRole(req: CreateRole) {
+  public async createRole(req: CreateRoleRequest) {
     const { userId, type } = req;
     // Check if exists a role
     const existingRole = await Role.findOne({ userId, type });

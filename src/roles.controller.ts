@@ -1,8 +1,17 @@
-import { CanOnInstanceRequest, CanOnInstanceResponse, CanRequest, CanResponse } from '@micro/common/types/authorization';
-import { Body, Controller, Param }                                              from '@nestjs/common';
-import { GrpcMethod }                                                           from '@nestjs/microservices';
-import { RolesService }                                                         from 'src/roles.service';
-import { CreateRole }                                                           from 'src/schemas/roles';
+import {
+  CanOnInstanceRequest,
+  CanOnInstanceResponse,
+  CanRequest,
+  CanResponse,
+  CreateRoleRequest,
+  CreateRoleResponse,
+  GetRolesRequest,
+  GetRolesResponse,
+}                                     from '@micro/common/src/types/authorization';
+import { Controller }                 from '@nestjs/common';
+import { GrpcMethod, MessagePattern } from '@nestjs/microservices';
+import { IRole }                      from 'src/models/role';
+import { RolesService }               from 'src/roles.service';
 
 @Controller()
 export class RolesController {
@@ -20,12 +29,17 @@ export class RolesController {
   }
 
   @GrpcMethod('RolesService')
-  async getRoles(@Param('id') id: string) {
-    return await this.rolesService.getRoles({ userId: id });
+  async getRoles(req: GetRolesRequest): Promise<GetRolesResponse<IRole>> {
+    return await this.rolesService.getRoles(req);
   }
 
   @GrpcMethod('RolesService')
-  async createRole(@Body() req: CreateRole) {
+  async createRole(req: CreateRoleRequest): Promise<CreateRoleResponse<IRole>> {
+    return await this.rolesService.createRole(req);
+  }
+
+  @MessagePattern({ cmd: 'createRole' })
+  async asyncCreateRole(req: CreateRoleRequest) {
     return await this.rolesService.createRole(req);
   }
 }
