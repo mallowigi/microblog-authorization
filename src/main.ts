@@ -10,7 +10,7 @@ async function bootstrap() {
   app.connectMicroservice({
     transport: Transport.NATS,
     options:   {
-      url:   process.env.NATS_URL || 'nats://localhost:8222',
+      url:   process.env.NATS_URL || 'nats://localhost:4222',
       queue: 'authorization',
       name:  'authorization',
     },
@@ -23,7 +23,7 @@ async function bootstrap() {
   );
   // tslint:disable-next-line:no-console
   await app.startAllMicroservicesAsync();
-  await app.listen(3000);
+  await app.listen(3002);
 }
 
 bootstrap();
