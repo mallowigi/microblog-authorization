@@ -1,8 +1,6 @@
+import { ActionType, RoleType, SubjectType }                        from '@micro/common/dist/src';
 import { connect, Model }                                           from 'mongoose';
 import * as mongoosePaginate                                        from 'mongoose-paginate';
-import { ActionType }                                               from 'src/models/actionTypes';
-import { RoleType }                                                 from 'src/models/roleTypes';
-import { SubjectType }                                              from 'src/models/subjects';
 import { createSchema, ExtractDoc, ExtractProps, Type, typedModel } from 'ts-mongoose';
 
 const MONGODB_URL = process.env.MONGODB_URL;
@@ -10,7 +8,7 @@ const MONGODB_URL = process.env.MONGODB_URL;
 connect(`${MONGODB_URL}/authorization`, { useNewUrlParser: true });
 
 const SubjectSchema = createSchema({
-  type:               Type.string({
+  type:               Type.number({
     required: true,
     enum:     Object.values(SubjectType),
   }),
@@ -19,7 +17,7 @@ const SubjectSchema = createSchema({
 
 const PermissionSchema = createSchema({
   actions: Type.array().of(
-    Type.string({
+    Type.number({
       required: true,
       enum:     Object.values(ActionType),
     }),
@@ -29,7 +27,7 @@ const PermissionSchema = createSchema({
 
 const RoleSchema = createSchema({
   userId:      Type.string({ required: true }),
-  type:        Type.string({
+  type:        Type.number({
     required: true,
     enum:     Object.values(RoleType),
   }),
@@ -39,6 +37,6 @@ const RoleSchema = createSchema({
 RoleSchema.plugin(mongoosePaginate);
 
 // Exports
-export type IRole = ExtractDoc<typeof RoleSchema>;
+export type RoleDocument = ExtractDoc<typeof RoleSchema>;
 export type RoleProps = ExtractProps<typeof RoleSchema>;
-export const Role: Model<IRole> = typedModel('Role', RoleSchema);
+export const RoleModel: Model<RoleDocument> = typedModel('Role', RoleSchema);

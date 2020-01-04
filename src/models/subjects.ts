@@ -1,23 +1,8 @@
-import { ActionType, actionTypes } from 'src/models/actionTypes';
+import { SubjectType } from '@micro/common/dist/src';
+import { Subjects }    from '@micro/common/src/types/authorization';
+import { actionTypes } from 'src/models/actionTypes';
 
-export enum SubjectType {
-  All = 'all',
-  Articles = 'articles',
-  Comments = 'comments',
-  Users = 'users',
-}
-
-export interface ISubject {
-  type: SubjectType;
-  actions?: ActionType[];
-  conditionFieldName?: string;
-}
-
-interface ISubjects {
-  [index: string]: ISubject;
-}
-
-export const subjects: ISubjects = {
+export const subjects: Subjects = {
   all:      {
     type:               SubjectType.All,
     conditionFieldName: '',

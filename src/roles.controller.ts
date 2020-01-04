@@ -10,7 +10,7 @@ import {
 }                                     from '@micro/common/src/types/authorization';
 import { Controller }                 from '@nestjs/common';
 import { GrpcMethod, MessagePattern } from '@nestjs/microservices';
-import { IRole }                      from 'src/models/role';
+import { RoleDocument }               from 'src/models/role';
 import { RolesService }               from 'src/roles.service';
 
 @Controller()
@@ -29,12 +29,12 @@ export class RolesController {
   }
 
   @GrpcMethod('RolesService')
-  async getRoles(req: GetRolesRequest): Promise<GetRolesResponse<IRole>> {
+  async getRoles(req: GetRolesRequest): Promise<GetRolesResponse<RoleDocument>> {
     return await this.rolesService.getRoles(req);
   }
 
   @GrpcMethod('RolesService')
-  async createRole(req: CreateRoleRequest): Promise<CreateRoleResponse<IRole>> {
+  async createRole(req: CreateRoleRequest): Promise<CreateRoleResponse<RoleDocument>> {
     return await this.rolesService.createRole(req);
   }
 

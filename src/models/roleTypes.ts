@@ -1,26 +1,8 @@
-import { ActionType }         from 'src/models/actionTypes';
-import { ISubject, subjects } from 'src/models/subjects';
+import { RoleType } from '@micro/common/dist/src';
+import { IRoles }   from '@micro/common/src/types/authorization';
+import { subjects } from 'src/models/subjects';
 
-export enum RoleType {
-  Admin = 'admin',
-  User = 'user',
-}
-
-interface IRoleType {
-  type: RoleType;
-  permissions: IPermission[];
-}
-
-interface RoleTypes {
-  [index: string]: IRoleType;
-}
-
-interface IPermission {
-  subject: ISubject;
-  actions: ActionType[];
-}
-
-export const roleTypes: RoleTypes = {
+export const roleTypes: IRoles = {
   admin: {
     type:        RoleType.Admin,
     permissions: [

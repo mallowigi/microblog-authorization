@@ -1,5 +1,5 @@
+import { RoleType } from '@micro/common/dist/src';
 import { IsString } from 'class-validator';
-import { RoleType } from 'src/models/roleTypes';
 
 export interface Roles {
   userId: string;

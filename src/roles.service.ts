@@ -1,4 +1,4 @@
-import { logger }              from '@micro/common/dist/src';
+import { logger, RoleType }        from '@micro/common/dist/src';
 import {
   CanOnInstanceRequest,
   CanOnInstanceResponse,
@@ -6,10 +6,10 @@ import {
   CanResponse,
   CreateRoleRequest,
   IRolesService,
-}                              from '@micro/common/src/types/authorization';
-import { Injectable }          from '@nestjs/common';
-import { IRole, Role }         from 'src/models/role';
-import { RoleType, roleTypes } from 'src/models/roleTypes';
+}                                  from '@micro/common/src/types/authorization';
+import { Injectable }              from '@nestjs/common';
+import { RoleDocument, RoleModel } from 'src/models/role';
+import { roleTypes }               from 'src/models/roleTypes';
 
 function canBySubject(param: { subject: string; roles: any; action: string; userId: string }) {
   return false;
@@ -20,12 +20,12 @@ async function canBySubjectInstance(param: { subject: string; roles: any; action
 }
 
 @Injectable()
-export class RolesService implements IRolesService<IRole> {
+export class RolesService implements IRolesService<RoleDocument> {
   public async can(request: CanRequest): Promise<CanResponse> {
     try {
       const { userId } = request;
       // Get all roles related with the user
-      const roles = await Role.find({ userId });
+      const roles = await RoleModel.find({ userId });
       return { yes: canBySubject({ roles, ...request }) };
     }
     catch (error) {
@@ -42,7 +42,7 @@ export class RolesService implements IRolesService<IRole> {
     try {
       const { userId } = request;
       // Get all roles related with the user
-      const roles = await Role.find({ userId });
+      const roles = await RoleModel.find({ userId });
       return { yes: await canBySubjectInstance({ roles, ...request }) };
     }
     catch (error) {
@@ -57,7 +57,7 @@ export class RolesService implements IRolesService<IRole> {
 
   public async getRoles({ userId }) {
     try {
-      const roles = await Role.find({ userId });
+      const roles = await RoleModel.find({ userId });
       logger.info({
         message: 'fetched roles',
         payload: { userId },
@@ -75,7 +75,7 @@ export class RolesService implements IRolesService<IRole> {
   public async createRole(req: CreateRoleRequest) {
     const { userId, type } = req;
     // Check if exists a role
-    const existingRole = await Role.findOne({ userId, type });
+    const existingRole = await RoleModel.findOne({ userId, type });
 
     if (existingRole) {
       const message = 'role already exists';
@@ -112,16 +112,16 @@ export class RolesService implements IRolesService<IRole> {
     }
   }
 
-  async newUserRole(userId: string): Promise<IRole> {
-    return await Role.create({
+  async newUserRole(userId: string): Promise<RoleDocument> {
+    return await RoleModel.create({
       userId,
       type:        roleTypes.user.type,
       permissions: roleTypes.user.permissions,
     });
   }
 
-  async newAdminRole(userId: string): Promise<IRole> {
-    return await Role.create({
+  async newAdminRole(userId: string): Promise<RoleDocument> {
+    return await RoleModel.create({
       userId,
       type:        roleTypes.admin.type,
       permissions: roleTypes.admin.permissions,

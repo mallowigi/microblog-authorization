@@ -1,12 +1,7 @@
-export enum ActionType {
-  Manage = 'manage',
-  Read = 'read',
-  Create = 'create',
-  Update = 'update',
-  Delete = 'delete',
-}
+import { ActionType }  from '@micro/common/dist/src';
+import { ActionTypes } from '@micro/common/src/types/authorization';
 
-export const actionTypes = {
+export const actionTypes: ActionTypes = {
   manage: {
     type: ActionType.Manage,
   },
@@ -23,7 +18,3 @@ export const actionTypes = {
     type: ActionType.Delete,
   },
 };
-
-export interface IAction {
-  type: ActionType;
-}
