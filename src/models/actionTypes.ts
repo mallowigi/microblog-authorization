@@ -1,5 +1,4 @@
-import { ActionType }  from '@micro/common/dist/src';
-import { ActionTypes } from '@micro/common/src/types/authorization';
+import { ActionTypes, ActionType } from '@mallowigi/common';
 
 export const actionTypes: ActionTypes = {
   manage: {

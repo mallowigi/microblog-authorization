@@ -1,6 +1,5 @@
-import { SubjectType } from '@micro/common/dist/src';
-import { Subjects }    from '@micro/common/src/types/authorization';
 import { actionTypes } from 'src/models/actionTypes';
+import { Subjects, SubjectType } from '@mallowigi/common';
 
 export const subjects: Subjects = {
   all:      {

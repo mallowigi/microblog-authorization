@@ -1,7 +1,7 @@
-import { ActionType, RoleType, SubjectType }                        from '@micro/common/dist/src';
 import { connect, Model }                                           from 'mongoose';
 import * as mongoosePaginate                                        from 'mongoose-paginate';
 import { createSchema, ExtractDoc, ExtractProps, Type, typedModel } from 'ts-mongoose';
+import { SubjectType, ActionType, RoleType } from '@mallowigi/common';
 
 const MONGODB_URL = process.env.MONGODB_URL;
 

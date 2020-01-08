@@ -1,17 +1,14 @@
+import { Controller } from '@nestjs/common';
+import { GrpcMethod, MessagePattern } from '@nestjs/microservices';
+import { RoleDocument } from 'src/models/role';
+import { RolesService } from 'src/roles.service';
 import {
-  CanOnInstanceRequest,
-  CanOnInstanceResponse,
   CanRequest,
   CanResponse,
-  CreateRoleRequest,
-  CreateRoleResponse,
-  GetRolesRequest,
-  GetRolesResponse,
-}                                     from '@micro/common/src/types/authorization';
-import { Controller }                 from '@nestjs/common';
-import { GrpcMethod, MessagePattern } from '@nestjs/microservices';
-import { RoleDocument }               from 'src/models/role';
-import { RolesService }               from 'src/roles.service';
+  CanOnInstanceRequest,
+  CanOnInstanceResponse,
+  GetRolesRequest, GetRolesResponse, CreateRoleResponse, CreateRoleRequest,
+} from '@mallowigi/common';
 
 @Controller()
 export class RolesController {

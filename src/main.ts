@@ -1,8 +1,8 @@
-import { authorizationGrpcClientOptions } from '@micro/common/dist/src';
 import { ValidationPipe }                 from '@nestjs/common';
 import { NestFactory }                    from '@nestjs/core';
 import { Transport }                      from '@nestjs/microservices';
 import { AppModule }                      from './app.module';
+import { authorizationGrpcClientOptions } from '@mallowigi/common';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);

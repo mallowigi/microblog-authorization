@@ -1,6 +1,5 @@
-import { RoleType } from '@micro/common/dist/src';
-import { IRoles }   from '@micro/common/src/types/authorization';
 import { subjects } from 'src/models/subjects';
+import { RoleType, IRoles } from '@mallowigi/common';
 
 export const roleTypes: IRoles = {
   admin: {
