@@ -1,8 +1,8 @@
-import { Ability }                     from '@casl/ability';
-import { usersNatsClient }             from '@mallowigi/authorization/src/clients.provider';
-import { IRole, logger, SubjectNames } from '@mallowigi/common';
-import { Injectable }                  from '@nestjs/common';
-import { Client, ClientProxy }         from '@nestjs/microservices';
+import { Ability }                                   from '@casl/ability';
+import { usersNatsClient }                           from '@mallowigi/authorization/src/clients.provider';
+import { IRole, logger, subjectNames, SubjectNames } from '@mallowigi/common';
+import { Injectable }                                from '@nestjs/common';
+import { Client, ClientProxy }                       from '@nestjs/microservices';
 
 interface CanBySubjectParams {
   roles: IRole[];
@@ -27,6 +27,10 @@ export class AbilityService {
   @Client(usersNatsClient)
   usersClient: ClientProxy;
 
+  async onModuleInit() {
+    await this.usersClient.connect();
+  }
+
   canBySubject({ roles, userId, action, subject }: CanBySubjectParams) {
     const permissions = this.getPermissionsFromRoles(roles);
     const ability = new Ability(permissions, { subjectName });
@@ -47,6 +51,9 @@ export class AbilityService {
 
     try {
       const subjectInstance = await this.getSubjectInstance(subject, subjectId);
+      if (!subjectInstance) {
+        return false;
+      }
       const hasAbility = ability.can(action, subjectt(subject, subjectInstance));
       if (!hasAbility) {
         logger.warn({
@@ -86,10 +93,12 @@ export class AbilityService {
     return permissions;
   }
 
-  private getSubjectInstance(subject: SubjectNames, subjectId: string) {
+  private async getSubjectInstance(subject: SubjectNames, subjectId: string) {
     switch (subject) {
-      case 'users':
-        return this.usersClient.send({ cmd: 'getUser' }, { id: subjectId });
+      case subjectNames.users:
+        return this.usersClient.send({ cmd: 'getUser' }, { id: subjectId }).toPromise();
+      default:
+        return null;
     }
   }
 }
