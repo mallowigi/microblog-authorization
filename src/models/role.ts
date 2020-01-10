@@ -1,4 +1,4 @@
-import { ActionType, RoleType, SubjectType }                        from '@mallowigi/common';
+import { ActionType, RoleType, subjectNames, SubjectType }          from '@mallowigi/common';
 import { connect, Model }                                           from 'mongoose';
 import * as mongoosePaginate                                        from 'mongoose-paginate';
 import { createSchema, ExtractDoc, ExtractProps, Type, typedModel } from 'ts-mongoose';
@@ -8,7 +8,10 @@ const MONGODB_URL = process.env.MONGODB_URL;
 connect(`${MONGODB_URL}/authorization`, { useNewUrlParser: true });
 
 const SubjectSchema = createSchema({
-  name:               Type.string({ required: true }),
+  name:               Type.string({
+    required: true,
+    enum:     Object.values(subjectNames),
+  }),
   type:               Type.number({
     required: true,
     enum:     Object.values(SubjectType),
