@@ -1,14 +1,16 @@
-import { Injectable }              from '@nestjs/common';
-import { RoleDocument, RoleModel } from 'src/models/role';
-import { roleTypes }               from 'src/models/roleTypes';
+import { RoleDocument, RoleModel } from '@mallowigi/authorization/src/models/role';
+import { roleTypes }               from '@mallowigi/authorization/src/models/roleTypes';
 import {
-  IRolesService,
-  CanRequest,
-  CanResponse,
   CanOnInstanceRequest,
   CanOnInstanceResponse,
-  logger, CreateRoleRequest, RoleType,
-} from '@mallowigi/common';
+  CanRequest,
+  CanResponse,
+  CreateRoleRequest,
+  IRolesService,
+  logger,
+  RoleType,
+}                                  from '@mallowigi/common';
+import { Injectable }              from '@nestjs/common';
 
 function canBySubject(param: { subject: string; roles: any; action: string; userId: string }) {
   return false;
