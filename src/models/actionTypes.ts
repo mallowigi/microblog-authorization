@@ -18,7 +18,7 @@ export const actionTypes: ActionTypes = {
     type: ActionType.Update,
   },
   delete: {
-    delete: 'delete',
-    type:   ActionType.Delete,
+    name: 'delete',
+    type: ActionType.Delete,
   },
 };
