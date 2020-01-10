@@ -1,3 +1,4 @@
+import { AbilityService }          from '@mallowigi/authorization/src/ability/ability.service';
 import { RoleDocument, RoleModel } from '@mallowigi/authorization/src/models/role';
 import { roleTypes }               from '@mallowigi/authorization/src/models/roleTypes';
 import {
@@ -6,28 +7,25 @@ import {
   CanRequest,
   CanResponse,
   CreateRoleRequest,
+  GetRolesRequest,
+  GetRolesResponse,
   IRolesService,
   logger,
   RoleType,
 }                                  from '@mallowigi/common';
 import { Injectable }              from '@nestjs/common';
 
-function canBySubject(param: { subject: string; roles: any; action: string; userId: string }) {
-  return false;
-}
-
-async function canBySubjectInstance(param: { subject: string; roles: any; action: string; userId: string; subjectId: string }) {
-  return undefined;
-}
-
 @Injectable()
 export class RolesService implements IRolesService<RoleDocument> {
+  constructor(private readonly abilityService: AbilityService) {
+  }
+
   public async can(request: CanRequest): Promise<CanResponse> {
     try {
       const { userId } = request;
       // Get all roles related with the user
       const roles = await RoleModel.find({ userId });
-      return { yes: canBySubject({ roles, ...request }) };
+      return { yes: this.abilityService.canBySubject({ roles, ...request }) };
     }
     catch (error) {
       logger.error({
@@ -44,7 +42,7 @@ export class RolesService implements IRolesService<RoleDocument> {
       const { userId } = request;
       // Get all roles related with the user
       const roles = await RoleModel.find({ userId });
-      return { yes: await canBySubjectInstance({ roles, ...request }) };
+      return { yes: await this.abilityService.canBySubjectInstance({ roles, ...request }) };
     }
     catch (error) {
       logger.error({
@@ -56,7 +54,8 @@ export class RolesService implements IRolesService<RoleDocument> {
     }
   }
 
-  public async getRoles({ userId }) {
+  public async getRoles(req: GetRolesRequest): Promise<GetRolesResponse<RoleDocument>> {
+    const { userId } = req;
     try {
       const roles = await RoleModel.find({ userId });
       logger.info({
