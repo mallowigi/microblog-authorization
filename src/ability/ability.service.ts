@@ -1,8 +1,7 @@
-import { Ability }                                   from '@casl/ability';
-import { usersNatsClient }                           from '@mallowigi/authorization/src/clients.provider';
-import { IRole, logger, subjectNames, SubjectNames } from '@mallowigi/common';
-import { Injectable }                                from '@nestjs/common';
-import { Client, ClientProxy }                       from '@nestjs/microservices';
+import { Ability }                                                    from '@casl/ability';
+import { IRole, logger, subjectNames, SubjectNames, usersNatsClient } from '@mallowigi/common';
+import { Injectable }                                                 from '@nestjs/common';
+import { Client, ClientProxy }                                        from '@nestjs/microservices';
 
 interface CanBySubjectParams {
   roles: IRole[];
